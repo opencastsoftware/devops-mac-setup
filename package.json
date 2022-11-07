@@ -1,6 +1,6 @@
 {
     "name": "devops-mac-setup",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "description": "",
     "main": "index.js",
     "dependencies": {
@@ -19,7 +19,7 @@
         "lint:check": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter",
         "lint:fix": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter --fix",
         "test": "npm run lint:check",
-        "release": ". ./increment_version.sh $1"
+        "release": ". ./increment_version.sh"
     },
     "repository": {
         "type": "git",
