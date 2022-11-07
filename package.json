@@ -1,0 +1,34 @@
+{
+  "name": "devops-mac-setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "version": "^0.0.4"
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "mega-linter-runner": "^6.14.0"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "prod": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/opencastsoftware/devops-mac-setup/HEAD/setup.sh)\"",
+    "dev": ". ./setup.sh",
+    "lint:check": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter",
+    "lint:fix": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter --fix",
+    "test": "npm run lint:check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencastsoftware/devops-mac-setup.git"
+  },
+  "author": "Charlie Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/opencastsoftware/devops-mac-setup/issues"
+  },
+  "homepage": "https://github.com/opencastsoftware/devops-mac-setup#readme",
+  "volta": {
+    "node": "18.12.1"
+  }
+}
