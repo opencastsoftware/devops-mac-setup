@@ -1,6 +1,6 @@
 {
     "name": "devops-mac-setup",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "description": "",
     "main": "index.js",
     "dependencies": {
@@ -29,7 +29,7 @@
         "release"
     ],
     "author": "Charlie Smith",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/opencastsoftware/devops-mac-setup/issues"
     },
