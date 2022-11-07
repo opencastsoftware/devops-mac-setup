@@ -8,9 +8,8 @@
     },
     "devDependencies": {
         "auto-version-js": "^0.3.10",
-        "husky": "^8.0.1",
-        "mega-linter-runner": "^6.14.0",
-        "pre-commit": "^1.2.2"
+        "husky": "^8.0.0",
+        "mega-linter-runner": "^6.14.0"    
     },
     "scripts": {
         "prepare": "husky install",
@@ -19,15 +18,17 @@
         "lint:check": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter",
         "lint:fix": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter --fix",
         "test": "npm run lint:check",
-        "release": ". ./increment_version.sh"
+        "release": ". ./increment_version.sh && npm run test"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/opencastsoftware/devops-mac-setup.git"
     },
-    "pre-commit": [
-        "release"
-    ],
+    "husky": {
+      "hooks": {
+        "pre-commit": "echo \"precommit hooks\" && npm run release"
+      }
+    },
     "author": "Charlie Smith",
     "license": "MIT",
     "bugs": {
