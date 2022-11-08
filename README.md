@@ -1,6 +1,6 @@
 # devops-mac-setup
 <h1> Introduction</h1>
-<p> This repo is intended to provide a helper script to speed up and automate the setup of MacOs primary for DevOps engineers, but also Developer using AWS,Docker and Node</p>
+<p> This repo is intended to provide a helper script to speed up and automate the setup of MacOs primarily for DevOps engineers, but also Developers using AWS,Docker and Node</p>
 <br>
 <p>The setup script will install various brew formula's, casks and taps based on documentation <a href="https://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members"> Here</a>, along with configuring git intregration with Github</p>
 <hr>
@@ -26,7 +26,7 @@ Runs when you commit
 ```
 npm run test
 ```
-Automatically gets run as a pre-commit hook if the git origin is main. It will increment the minor version in the package.json and tag the commit
+Run to increment the commit tag and bump the version in the package.json
 ```
 npm run release
 ```
