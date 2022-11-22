@@ -1,41 +1,38 @@
 {
-    "name": "devops-mac-setup",
-    "version": "1.12.0",
-    "description": "",
-    "main": "index.js",
-    "dependencies": {
-        "version": "^0.0.4"
-    },
-    "devDependencies": {
-        "auto-version-js": "^0.3.10",
-        "husky": "^8.0.0",
-        "mega-linter-runner": "^6.14.0"
-    },
-    "scripts": {
-        "prepare": "husky install",
-        "prod": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/opencastsoftware/devops-mac-setup/HEAD/setup.sh)",
-        "dev": ". ./setup.sh",
-        "lint:check": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter",
-        "lint:fix": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter --fix",
-        "test": "npm run lint:check",
-        "release": ". ./increment_version.sh && npm run test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/opencastsoftware/devops-mac-setup.git"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "echo \"precommit hooks\" && npm run release"
-        }
-    },
-    "author": "Charlie Smith",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/opencastsoftware/devops-mac-setup/issues"
-    },
-    "homepage": "https://github.com/opencastsoftware/devops-mac-setup#readme",
-    "volta": {
-        "node": "18.12.1"
+  "name": "devops-mac-setup",
+  "version": "1.12.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "auto-version-js": "^0.3.10",
+    "husky": "^8.0.0",
+    "mega-linter-runner": "^6.14.0"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "prod": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/opencastsoftware/devops-mac-setup/HEAD/setup.sh)",
+    "dev": ". ./setup.sh",
+    "lint:check": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter",
+    "lint:fix": "mega-linter-runner --flavor ci_light --remove-container --container-name megalinter --fix",
+    "test": "npm run lint:check",
+    "release": ". ./increment_version.sh && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencastsoftware/devops-mac-setup.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo \"precommit hooks\" && npm run release"
     }
+  },
+  "author": "Charlie Smith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/opencastsoftware/devops-mac-setup/issues"
+  },
+  "homepage": "https://github.com/opencastsoftware/devops-mac-setup#readme",
+  "volta": {
+    "node": "18.12.1"
+  }
 }
