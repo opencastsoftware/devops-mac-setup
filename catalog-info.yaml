@@ -1,8 +1,9 @@
+---
 apiVersion: backstage.io/v1alpha1
-
-kind: API
+kind: Component
 metadata:
   name: devops-mac-setup
+  description: mac setup repo
   links:
     - url: https://opencastsoftware.atlassian.net/wiki/spaces/DPEC/pages/2759524353/Onboarding+Guide+For+New+DevOps+Engineers#Laptop-Setup
       title: Confluence Page
