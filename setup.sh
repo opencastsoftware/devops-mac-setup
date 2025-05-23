@@ -87,7 +87,7 @@ tput setaf 2 && read -rp "Do you want to configure git now yes[y]/no[n]? " confi
 if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 	declare my_username
 	my_username="$(whoami)"
-	formatted_username=$(echo "${my_username}" | sed -r 's/[.]/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1}') || throw_error "Error formatting username"
+	formatted_username=$(echo "${my_username}" | sed -r 's/[.]/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); } 1') || throw_error "Error formatting username"
 
 	git config --replace-all --global user.name "${formatted_username}" || { echo "Failed to configure Git username"; exit 1; }
 
