@@ -93,6 +93,8 @@ if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; t
 
 	git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
 
+	echo "configured git credentials to to: $configure_git"
+
 	tput setaf 4 && read -rp "   Do you want to use VS Code as your default IDE (Yes [y]/No [n])? " default_IDE && tput sgr0
 	if [[ "$(echo "$default_IDE" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 
