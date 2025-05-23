@@ -12,6 +12,7 @@ formulas=(
     "awscli"
     "cdk"
     "colima"
+    "docker"
     "docker-compose"
     "gh"
     "git"
@@ -23,7 +24,6 @@ formulas=(
     "netcat"
     "node"
     "openssl"
-    "pip"
     "powerlevel10k"
     "pre-commit"
     "python@3.10"
@@ -34,7 +34,6 @@ formulas=(
 )
 
 casks=(
-    "docker"
     "git-credential-manager-core"
     "github"
     "miro"
