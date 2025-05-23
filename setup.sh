@@ -84,7 +84,7 @@ done
 
 tput setaf 2 && read -rp "Do you want to configure git now yes[y]/no[n]? " configure_git && tput sgr0
 
-if [[ "${configure_git,,}" =~ ^(y|yes)$ ]]; then
+[[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 	declare my_username
 	my_username="$(whoami)"
 	formatted_username=$(echo "${my_username}" | sed -r 's/[.]/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1}') || throw_error "Error formatting username"
@@ -94,14 +94,14 @@ if [[ "${configure_git,,}" =~ ^(y|yes)$ ]]; then
 	git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
 
 	tput setaf 4 && read -rp "   Do you want to use VS Code as your default IDE (Yes [y]/No [n])? " default_IDE && tput sgr0
-	if [[ "${default_IDE,,}" =~ ^(y|yes)$ ]]; then
+	if [[ "$(echo "$default_IDE" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 
 		git config --global core.editor "code -w"
 	fi
 
 	git config --global init.defaultBranch main
 	tput setaf 4 && read -rp "    Please signup for a github account using your opencast credentials before you continue yes[y]/no[n]? " git_login && tput sgr0
-	if [[ "${git_login,,}" =~ ^(y|yes)$ ]]; then
+	if [[ "$(echo "$git_login" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 
 		gh auth login || throw_error "Github Login Failed"
 	fi
