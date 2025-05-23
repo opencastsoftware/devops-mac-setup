@@ -4,7 +4,6 @@
 vscode_extensions=(
     "aslamanver.vsc-export"
     "ban.spellright"
-    "Bridgecrew.checkov"
     "DavidAnson.vscode-markdownlint"
     "eamodio.gitlens"
     "EditorConfig.EditorConfig"
