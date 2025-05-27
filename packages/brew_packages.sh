@@ -12,6 +12,7 @@ formulas=(
     "awscli"
     "cdk"
     "colima"
+    "coreutils"
     "docker"
     "docker-compose"
     "gh"
