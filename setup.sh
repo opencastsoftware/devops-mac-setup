@@ -15,20 +15,15 @@ run_cmd() {
     fi
 }
 
-# Create aliases for key system commands for dry-run mode.
+# Override key system commands for dry-run mode.
 if $dry_run; then
-    commands=(
-        "brew"
-        "git"
-        "code"
-        "gh"
-        "PrivilegesCLI"
-        "rm"
-        "source"
-    )
-    for cmd in "${commands[@]}"; do
-        alias "$cmd"="run_cmd $cmd"
-    done
+    brew() { run_cmd brew "$@"; }
+    git() { run_cmd git "$@"; }
+    code() { run_cmd code "$@"; }
+    gh() { run_cmd gh "$@"; }
+    PrivilegesCLI() { run_cmd PrivilegesCLI "$@"; }
+    rm() { run_cmd rm "$@"; }
+    source() { run_cmd source "$@"; }
 fi
 
 ################
@@ -189,7 +184,8 @@ case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
                 gh auth login --git-protocol ssh
 
                 echo "Git credentials configured! Please check GitHub in your browser, copy and paste the above confirmation code."
-                echo -e "\n\nWhen we are all happy, please follow the instructions here \e[1;34mhttps://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights\e[0m to setup GPG signing on your \e[1;34mgit commits\e[0m."
+                echo -e "\n\nWhen we are all happy, please follow the instructions here $(tput setaf 4)https://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights$(tput sgr0) to setup GPG signing on your $(tput setaf 4)git commits$(tput sgr0)."
+
                 ;;
             n|no)
                 echo "Skipping GitHub connection test."
