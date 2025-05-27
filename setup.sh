@@ -20,7 +20,6 @@ if $dry_run; then
     brew() { run_cmd brew "$@"; }
     git() { run_cmd git "$@"; }
     code() { run_cmd code "$@"; }
-    gh() { run_cmd gh "$@"; }
     PrivilegesCLI() { run_cmd PrivilegesCLI "$@"; }
     rm() { run_cmd rm "$@"; }
     source() { run_cmd source "$@"; }
