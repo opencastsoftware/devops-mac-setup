@@ -2,11 +2,11 @@
 
 set -e
 
-# Dry-run mode configuration
+# Dry-run mode configuration.
 dry_run=false
 [[ "$1" == "--dry-run" ]] && dry_run=true
 
-# Function to handle dry-run execution
+# Function to handle dry-run execution.
 run_cmd() {
     if $dry_run; then
         echo "[DRY-RUN] $*" | tee -a dry-run.log
@@ -15,15 +15,20 @@ run_cmd() {
     fi
 }
 
-# Override key system commands for dry-run mode
+# Create aliases for key system commands for dry-run mode.
 if $dry_run; then
-    brew() { run_cmd brew "$@"; }
-    git() { run_cmd git "$@"; }
-    code() { run_cmd code "$@"; }
-    gh() { run_cmd gh "$@"; }
-    PrivilegesCLI() { run_cmd PrivilegesCLI "$@"; }
-    rm() { run_cmd rm "$@"; }
-    source() { run_cmd source "$@"; }
+    commands=(
+        "brew"
+        "git"
+        "code"
+        "gh"
+        "PrivilegesCLI"
+        "rm"
+        "source"
+    )
+    for cmd in "${commands[@]}"; do
+        alias "$cmd"="run_cmd $cmd"
+    done
 fi
 
 ################
