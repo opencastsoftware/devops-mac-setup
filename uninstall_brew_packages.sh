@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Uninstalling packages installed by this script..."
+echo -e "Uninstalling packages installed by the \e[1;34msetup.sh\e[0 script..."
 
 # Load the package lists from the external file
 source packages/brew_packages.sh || { echo "Failed to load brew package list"; exit 1; }
@@ -27,4 +27,4 @@ done
 # Cleanup unnecessary dependencies
 brew cleanup
 
-echo "All packages installed by the script have been removed!"
+echo -e "All packages installed by the \e[1;34msetup.sh\e[0 script have been removed!"
