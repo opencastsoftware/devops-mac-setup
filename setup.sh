@@ -1,7 +1,30 @@
 #!/bin/bash
 
 set -e
-# set -o inherit_errexit
+
+# Dry-run mode configuration
+dry_run=false
+[[ "$1" == "--dry-run" ]] && dry_run=true
+
+# Function to handle dry-run execution
+run_cmd() {
+    if $dry_run; then
+        echo "[DRY-RUN] $*" | tee -a dry-run.log
+    else
+        "$@"
+    fi
+}
+
+# Override key system commands for dry-run mode
+if $dry_run; then
+    brew() { run_cmd brew "$@"; }
+    git() { run_cmd git "$@"; }
+    code() { run_cmd code "$@"; }
+    gh() { run_cmd gh "$@"; }
+    PrivilegesCLI() { run_cmd PrivilegesCLI "$@"; }
+    rm() { run_cmd rm "$@"; }
+    source() { run_cmd source "$@"; }
+fi
 
 ################
 # Setup script to configure MacOS tool chain for DevOps Engineers at Opencast Software.
@@ -18,6 +41,9 @@ timestamp() {
 throw_error() {
     tput setaf 1
     error_time=$(timestamp)
+
+	# If dry-run mode is enabled, just display the message and exit gracefully & continue.
+    [[ $dry_run == true ]] && echo -e "[DRY-RUN] No action taken, but error detected." && tput sgr0 && exit 0
 
     declare -A error_messages
     error_messages=(
