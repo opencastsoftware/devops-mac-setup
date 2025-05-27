@@ -31,6 +31,7 @@ formulas=(
     "ruby"
     "tfswitch"
     "volta"
+    "vim"
     "warrensbox/tap/tfswitch"
 )
 

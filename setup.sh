@@ -84,34 +84,70 @@ for extension in "${vscode_extensions[@]}"; do
     code --install-extension "$extension" || throw_error "Failed to install $extension"
 done
 
-tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n]" configure_git && tput sgr0
+tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n] " configure_git && tput sgr0
 
-if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
-	declare my_username
-	my_username="$(whoami)"
-	formatted_username=$(echo "${my_username}" | sed -r 's/[.]/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); } 1') || throw_error "Error formatting username"
+case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
+    y|yes)
+        my_username="$(whoami)"
+        formatted_username=$(echo "${my_username}" | sed -r 's/[.]/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); } 1') || throw_error "Error formatting username"
 
-	git config --replace-all --global user.name "${formatted_username}" || { echo "Failed to configure Git username"; exit 1; }
+        git config --replace-all --global user.name "${formatted_username}" || throw_error "Failed to configure Git username"
+        git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
 
-	git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
+        git_config_output=$(git config --list)
+        printf "Git configured with credentials:\n%s\n" "$git_config_output"
 
-	git_config_output=$(git config --list)
-	printf "Git configured with credentials:\n%s\n" "$git_config_output"
+		echo "Choose your preferred Git editor:"
+		select editor in "VS Code" "Vim" "Nano" "Skip"; do
+			case $editor in
+				"VS Code")
+					git config --global core.editor "code -w"
+					echo "VS Code set as default Git editor."
+					break
+					;;
+				"Vim")
+					git config --global core.editor "vim"
+					echo "Vim set as default Git editor."
+					break
+					;;
+				"Nano")
+					git config --global core.editor "nano"
+					echo "Nano set as default Git editor."
+					break
+					;;
+				"Skip")
+					echo "Skipping editor setup."
+					break
+					;;
+				*)
+					echo "Invalid option, please try again."
+					;;
+			esac
+		done
 
-	tput setaf 4 && read -rp "   Do you want to use VS Code as your default IDE (Yes [y]/No [n])? " default_IDE && tput sgr0
-	if [[ "$(echo "$default_IDE" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
+        git config --global init.defaultBranch main
 
-		git config --global core.editor "code -w"
-	fi
+        tput setaf 4 && read -rp "Please ensure that you have a GitHub account associated with your Opencast credentials. Would you like to test the connection now? yes[y]/no[n] " git_login && tput sgr0
+        case "$(echo "$git_login" | tr '[:upper:]' '[:lower:]')" in
+            y|yes)
+                gh config set git_protocol ssh
+                gh auth login --git-protocol ssh || throw_error "Github Login Failed"
 
-	git config --global init.defaultBranch main
-	tput setaf 4 && read -rp "Please ensure that you have a GitHub account associated with your Opencast credentials. Would you like to test the connection now? yes[y]/no[n]" git_login && tput sgr0
-	if [[ "$(echo "$git_login" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
-
-		gh config set git_protocol ssh
-		gh auth login --git-protocol ssh || throw_error "Github Login Failed"
-
-		echo "Git credentials configured! Please check GitHub in your browser, copy and pasting the above confirmation code."
-		echo -e "\n\nWhen we are all happy, please follow the instructions here \e[1;34mhttps://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights\e[0m to setup GPG signing on your \e[1;34mgit commits\e[0m."
-	fi
-fi
+                echo "Git credentials configured! Please check GitHub in your browser, copy and paste the above confirmation code."
+                echo -e "\n\nWhen we are all happy, please follow the instructions here \e[1;34mhttps://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights\e[0m to setup GPG signing on your \e[1;34mgit commits\e[0m."
+                ;;
+            n|no)
+                echo "Skipping GitHub connection test."
+                ;;
+            *)
+                echo "Invalid choice, skipping GitHub setup."
+                ;;
+        esac
+        ;;
+    n|no)
+        echo "Skipping Git configuration."
+        ;;
+    *)
+        echo "Invalid choice, skipping Git setup."
+        ;;
+esac
