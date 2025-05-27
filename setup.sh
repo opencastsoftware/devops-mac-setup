@@ -19,45 +19,27 @@ throw_error() {
     tput setaf 1
     error_time=$(timestamp)
 
-    case "$BASH_COMMAND" in
-        "source packages/brew_packages.sh")
-            echo -e "ERROR | ${error_time} | Failed to load package lists. Ensure 'brew_packages.sh' exists and is accessible."
-            ;;
-        "source packages/vscode_extensions.sh")
-            echo -e "ERROR | ${error_time} | Failed to load VS Code extensions. Ensure 'vscode_extensions.sh' exists and is accessible."
-            ;;
-        "brew bundle install")
-            echo -e "ERROR | ${error_time} | Brew package installation failed. Check for missing dependencies or network issues."
-            ;;
-        "rm -f Brewfile.lock.json")
-            echo -e "ERROR | ${error_time} | Failed to clean up Brewfile.lock.json. Check permissions."
-            ;;
-        "gh auth login --git-protocol ssh")
-            echo -e "ERROR | ${error_time} | GitHub authentication failed. Verify your credentials and SSH setup."
-            ;;
-        "PrivilegesCLI --add")
-            echo -e "ERROR | ${error_time} | Failed to elevate access using PrivilegesCLI. Try running manually."
-            ;;
-        "PrivilegesCLI --remove")
-            echo -e "ERROR | ${error_time} | Failed to revoke privileges using PrivilegesCLI."
-            ;;
-        "source ~/.zprofile")
-            echo -e "ERROR | ${error_time} | Failed to source ~/.zprofile. Check if the file exists."
-            ;;
-        "brew update")
-            echo -e "ERROR | ${error_time} | Failed to update Homebrew. Ensure network connectivity."
-            ;;
-		"code --install-extension "*)
-			extension_name=$(echo "$BASH_COMMAND" | awk '{print $NF}')
+    declare -A error_messages
+    error_messages=(
+        ["source packages/brew_packages.sh"]="Failed to load package lists. Ensure 'brew_packages.sh' exists and is accessible."
+        ["source packages/vscode_extensions.sh"]="Failed to load VS Code extensions. Ensure 'vscode_extensions.sh' exists and is accessible."
+        ["brew bundle install"]="Brew package installation failed. Check for missing dependencies or network issues."
+        ["rm -f Brewfile.lock.json"]="Failed to clean up Brewfile.lock.json. Check permissions."
+        ["gh auth login --git-protocol ssh"]="GitHub authentication failed. Verify your credentials and SSH setup."
+        ["PrivilegesCLI --add"]="Failed to elevate access using PrivilegesCLI. Try running manually."
+        ["PrivilegesCLI --remove"]="Failed to revoke privileges using PrivilegesCLI."
+        ["source ~/.zprofile"]="Failed to source ~/.zprofile. Check if the file exists."
+        ["brew update"]="Failed to update Homebrew. Ensure network connectivity."
+    )
 
-			tput setaf 1  # Set text color to red
-			echo -e "ERROR | ${error_time} | Failed to install VS Code extension: \e[1;31m$extension_name\e[0m."
-			tput sgr0  # Reset text formatting
-			;;
-        *)
-            echo -e "ERROR | ${error_time} | Unexpected failure while executing: $BASH_COMMAND."
-            ;;
-    esac
+    # Handling VS Code extension failures separately
+    if [[ "$BASH_COMMAND" == code\ --install-extension\ * ]]; then
+        extension_name=$(echo "$BASH_COMMAND" | awk '{print $NF}')
+        echo -e "ERROR | ${error_time} | Failed to install VS Code extension: \e[1;31m$extension_name\e[0m."
+    else
+        # Print the error message from the lookup table, or a default message if missing
+        echo -e "ERROR | ${error_time} | ${error_messages[$BASH_COMMAND]:-Unexpected failure while executing: $BASH_COMMAND}"
+    fi
 
     tput sgr0
     exit 1
