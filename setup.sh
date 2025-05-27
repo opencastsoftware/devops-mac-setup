@@ -23,6 +23,8 @@ throw_error() {
 	exit 1
 }
 
+echo "Homebrew Package Manager Setup:"
+
 if ! command -v brew &>/dev/null; then
     echo "Homebrew not found, installing in user directory..."
 
@@ -72,7 +74,7 @@ if [ -f Brewfile.lock.json ]; then
     rm -f Brewfile.lock.json
 fi
 
-# Visual Studio Code Setup
+ echo "Visual Studio Code Setup:"
 # Load VS Code extensions from the external file
 source packages/vscode_extensions.sh || throw_error "Failed to load VS Code extensions"
 
@@ -82,7 +84,7 @@ for extension in "${vscode_extensions[@]}"; do
     code --install-extension "$extension" || throw_error "Failed to install $extension"
 done
 
-tput setaf 2 && read -rp "Do you want to configure git now yes[y]/no[n]? " configure_git && tput sgr0
+tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n]" configure_git && tput sgr0
 
 if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 	declare my_username
@@ -93,7 +95,8 @@ if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; t
 
 	git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
 
-	echo "configured git credentials to to: $configure_git"
+	git_config_output=$(git config --list)
+	printf "Git configured with credentials:\n%s\n" "$git_config_output"
 
 	tput setaf 4 && read -rp "   Do you want to use VS Code as your default IDE (Yes [y]/No [n])? " default_IDE && tput sgr0
 	if [[ "$(echo "$default_IDE" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
@@ -102,9 +105,13 @@ if [[ "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; t
 	fi
 
 	git config --global init.defaultBranch main
-	tput setaf 4 && read -rp "    Please signup for a github account using your opencast credentials before you continue yes[y]/no[n]? " git_login && tput sgr0
+	tput setaf 4 && read -rp "Please ensure that you have a GitHub account associated with your Opencast credentials. Would you like to test the connection now? yes[y]/no[n]" git_login && tput sgr0
 	if [[ "$(echo "$git_login" | tr '[:upper:]' '[:lower:]')" =~ ^(y|yes)$ ]]; then
 
-		gh auth login || throw_error "Github Login Failed"
+		gh config set git_protocol ssh
+		gh auth login --git-protocol ssh || throw_error "Github Login Failed"
+
+		echo "Git credentials configured! Please check GitHub in your browser, copy and pasting the above confirmation code."
+		echo -e "\n\nWhen we are all happy, please follow the instructions here \e[1;34mhttps://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights\e[0m to setup GPG signing on your \e[1;34mgit commits\e[0m."
 	fi
 fi
