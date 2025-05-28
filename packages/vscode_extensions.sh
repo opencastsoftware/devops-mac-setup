@@ -13,6 +13,7 @@ vscode_extensions=(
     "GitLab.gitlab-workflow"
     "hashicorp.terraform"
     "kennylong.kubernetes-yaml-formatter"
+    "manishsencha.readme-preview"
     "ms-azuretools.vscode-docker"
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "ms-vscode-remote.remote-ssh"
