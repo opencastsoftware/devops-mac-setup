@@ -11,7 +11,7 @@ This script will also install various <span style="color: blue;">VS Code Extensi
 
 ## Usage
 
-To run the startup script, either clone this repo to run the script locally (via HTTPS if ):
+To run the startup script, either clone this repo to run the script locally (via HTTPS, assuming SSH Tokens are still to be setup for OC):
 ```
 git clone https://github.com/opencastsoftware/devops-mac-setup.git
 cd devops-mac-setup
