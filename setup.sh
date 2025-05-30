@@ -8,7 +8,7 @@ dry_run=false
 
 # Function to handle dry-run execution.
 run_cmd() {
-    if $dry_run; then
+    if ${dry_run}; then
         echo "[DRY-RUN] $*" | tee -a dry-run.log
     else
         "$@"
@@ -16,10 +16,11 @@ run_cmd() {
 }
 
 # Override key system commands for dry-run mode.
-if $dry_run; then
+if ${dry_run}; then
     brew() { run_cmd brew "$@"; }
     git() { run_cmd git "$@"; }
     code() { run_cmd code "$@"; }
+	PrivilegesCLI() { run_cmd PrivilegesCLI "$@"; }
     rm() { run_cmd rm "$@"; }
     source() { run_cmd source "$@"; }
 fi
@@ -57,12 +58,12 @@ throw_error() {
     )
 
     # Handling VS Code extension failures separately
-    if [[ "$BASH_COMMAND" == code\ --install-extension\ * ]]; then
-        extension_name=$(echo "$BASH_COMMAND" | awk '{print $NF}')
-        echo -e "ERROR | ${error_time} | Failed to install VS Code extension: \e[1;31m$extension_name\e[0m."
+    if [[ "${BASH_COMMAND}" == code\ --install-extension\ * ]]; then
+        extension_name=$(echo "${BASH_COMMAND}" | awk '{print $NF}')
+        echo -e "ERROR | ${error_time} | Failed to install VS Code extension: \e[1;31m${extension_name}\e[0m."
     else
         # Print the error message from the lookup table, or a default message if missing
-        echo -e "ERROR | ${error_time} | ${error_messages[$BASH_COMMAND]:-Unexpected failure while executing: $BASH_COMMAND}"
+        echo -e "ERROR | ${error_time} | ${error_messages[${BASH_COMMAND}]:-Unexpected failure while executing: ${BASH_COMMAND}}"
     fi
 
     tput sgr0
@@ -72,27 +73,28 @@ trap 'throw_error' ERR
 
 echo "Homebrew Package Manager Setup:"
 
+# adding privileges using Privileges App's CLI to install brew
+PrivilegesCLI --add
+
 if ! command -v brew &>/dev/null; then
     echo "Homebrew not found, installing in user directory..."
-
-	# adding privileges using Privileges App's CLI to install brew
-	PrivilegesCLI --add
 
     # Run Homebrew installation
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Add Homebrew to PATH
     echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+	# shellcheck source=$HOME/.zprofile
 	source ~/.zprofile
-
-    # Revoke privileges after installation
-    PrivilegesCLI --remove
 
     # Update Homebrew
     brew update
 
 else
     echo "Homebrew is already installed, skipping installation."
+
+	# Update Homebrew
+	brew update
 fi
 
 # Load the package lists from the external file
@@ -105,11 +107,11 @@ source packages/brew_packages.sh
     done
 
     for formula in "${formulas[@]}"; do
-        echo "brew \"$formula\""
+        echo "brew \"${formula}\""
     done
 
     for cask in "${casks[@]}"; do
-        echo "cask \"$cask\""
+        echo "cask \"${cask}\""
     done
 } > Brewfile
 
@@ -117,9 +119,12 @@ source packages/brew_packages.sh
 brew bundle check || brew bundle install
 
 # Cleanup Brewfile.lock.json
-if [ -f Brewfile.lock.json ]; then
+if [[ -f Brewfile.lock.json ]]; then
     rm -f Brewfile.lock.json
 fi
+
+# Revoke privileges after brew installations
+PrivilegesCLI --remove
 
  echo "Visual Studio Code Setup:"
 # Load VS Code extensions from the external file
@@ -128,7 +133,7 @@ source packages/vscode_extensions.sh
 # Install VS Code extensions dynamically
 tput setaf 4 && echo "Configuring Visual Studio Code Extensions" && tput sgr0
 for extension in "${vscode_extensions[@]}"; do
-    code --install-extension "$extension"
+    code --install-extension "${extension}"
 done
 
 tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n] " configure_git && tput sgr0
@@ -142,7 +147,7 @@ case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
         git config --replace-all --global user.email "${my_username}@opencastsoftware.com"
 
         git_config_output=$(git config --list)
-        printf "Git configured with credentials:\n%s\n" "$git_config_output"
+        printf "Git configured with credentials:\n%s\n" "${git_config_output}"
 
 		echo "Choose your preferred Git editor:"
 		select editor in "VS Code" "Vim" "Nano" "Skip"; do
@@ -175,7 +180,7 @@ case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
         git config --global init.defaultBranch main
 
         tput setaf 4 && read -rp "Please ensure that you have a GitHub account associated with your Opencast credentials. Would you like to test the connection now? yes[y]/no[n] " git_login && tput sgr0
-        case "$(echo "$git_login" | tr '[:upper:]' '[:lower:]')" in
+        case "$(echo "${git_login}" | tr '[:upper:]' '[:lower:]')" in
             y|yes)
                 gh config set git_protocol ssh
                 gh auth login --git-protocol ssh

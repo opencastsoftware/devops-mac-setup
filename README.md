@@ -30,6 +30,7 @@ Although fairly limited in scope, this project allows for usage of dry run mode.
 ```
 bash ./setup.sh --dry-run
 ```
+**Note** this will output a log file to your current directory `dry-run.log`.
 
 This allows a mocked run of the script as a check. **Note** this can also be used to check GitHub login for existing credentials.
 
