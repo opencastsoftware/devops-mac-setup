@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 # Dry-run mode configuration.
 dry_run=false
@@ -126,8 +126,20 @@ fi
 # Revoke privileges after brew installations
 PrivilegesCLI --remove
 
+# Install podman
+
+podmanmachine=$(podman machine ls|grep podman-machine-default|awk -F " " '{print $1}'|tr -d "*" )
+
+if [ $podmanmachine == "podman-machine-default" ]; then
+  podman machine info
+else
+  podman machine init --cpus 2 --memory 4096 --disk-size 20 && podman machine start && podman info
+fi
+
  echo "Visual Studio Code Setup:"
 # Load VS Code extensions from the external file
+echo "Ignore error of extensions"
+set +e
 source packages/vscode_extensions.sh
 
 # Install VS Code extensions dynamically
@@ -135,7 +147,8 @@ tput setaf 4 && echo "Configuring Visual Studio Code Extensions" && tput sgr0
 for extension in "${vscode_extensions[@]}"; do
     code --install-extension "${extension}"
 done
-
+echo "Ignore overridden"
+set -e
 tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n] " configure_git && tput sgr0
 
 case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
