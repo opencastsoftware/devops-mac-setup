@@ -128,7 +128,7 @@ PrivilegesCLI --remove
 
 # Install podman
 
-podmanmachine=$(podman machine ls|grep podman-machine-default|awk -F " " '{print $1}'|tr -d "*" )
+podmanmachine=$(podman machine ls|grep podman-machine-default|awk -F " " '{print $1}'|tr -d "*")
 
 if [ $podmanmachine == "podman-machine-default" ]; then
   podman machine info
