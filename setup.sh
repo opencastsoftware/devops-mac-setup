@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eo pipefail
+set -e
 
 # Dry-run mode configuration.
 dry_run=false
