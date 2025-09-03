@@ -131,7 +131,7 @@ PrivilegesCLI --remove
 podmanmachine=$(podman machine ls|grep podman-machine-default|awk -F " " '{print $1}'|tr -d "*")
 
 if [[ "${podmanmachine}" == "podman-machine-default" ]]; then
-  podman machine info
+  podman info
 else
   podman machine init --cpus 2 --memory 4096 --disk-size 20 && podman machine start && podman info
 fi
