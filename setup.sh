@@ -199,7 +199,7 @@ case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
                 gh auth login --git-protocol ssh
 
                 echo "Git credentials configured! Please check GitHub in your browser, copy and paste the above confirmation code."
-                echo -e "\n\nWhen we are all happy, please follow the instructions here $(tput setaf 4)https://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights$(tput sgr0) to setup GPG signing on your $(tput setaf 4)git commits$(tput sgr0)."
+                echo -e "\n\nWhen we are all happy, please follow the instructions here $(tput setaf 4)https://opencastsoftware.atlassian.net/wiki/spaces/DPEC/pages/4633624586/Miscellanous#Local-administrator-rights$(tput sgr0) to setup GPG signing on your $(tput setaf 4)git commits$(tput sgr0)."
 
                 ;;
             n|no)
