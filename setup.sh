@@ -126,8 +126,20 @@ fi
 # Revoke privileges after brew installations
 PrivilegesCLI --remove
 
+# Install podman
+
+podmanmachine=$(podman machine ls|grep podman-machine-default|awk -F " " '{print $1}'|tr -d "*")
+
+if [[ "${podmanmachine}" == "podman-machine-default" ]]; then
+  podman info
+else
+  podman machine init --cpus 2 --memory 4096 --disk-size 20 && podman machine start && podman info
+fi
+
  echo "Visual Studio Code Setup:"
 # Load VS Code extensions from the external file
+echo "Ignore error of extensions"
+set +e
 source packages/vscode_extensions.sh
 
 # Install VS Code extensions dynamically
@@ -135,7 +147,8 @@ tput setaf 4 && echo "Configuring Visual Studio Code Extensions" && tput sgr0
 for extension in "${vscode_extensions[@]}"; do
     code --install-extension "${extension}"
 done
-
+echo "Ignore overridden"
+set -e
 tput setaf 2 && read -rp "Do you want to configure git now? yes[y]/no[n] " configure_git && tput sgr0
 
 case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
@@ -186,7 +199,7 @@ case "$(echo "$configure_git" | tr '[:upper:]' '[:lower:]')" in
                 gh auth login --git-protocol ssh
 
                 echo "Git credentials configured! Please check GitHub in your browser, copy and paste the above confirmation code."
-                echo -e "\n\nWhen we are all happy, please follow the instructions here $(tput setaf 4)https://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members#Local-administrator-rights$(tput sgr0) to setup GPG signing on your $(tput setaf 4)git commits$(tput sgr0)."
+                echo -e "\n\nWhen we are all happy, please follow the instructions here $(tput setaf 4)https://opencastsoftware.atlassian.net/wiki/spaces/DPEC/pages/4633624586/Miscellanous#Local-administrator-rights$(tput sgr0) to setup GPG signing on your $(tput setaf 4)git commits$(tput sgr0)."
 
                 ;;
             n|no)

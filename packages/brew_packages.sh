@@ -25,6 +25,7 @@ formulas=(
     "netcat"
     "node"
     "openssl"
+    "podman"
     "powerlevel10k"
     "pre-commit"
     "python@3.10"
