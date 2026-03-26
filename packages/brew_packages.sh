@@ -30,14 +30,13 @@ formulas=(
     "pre-commit"
     "python@3.10"
     "ruby"
-    "tfswitch"
     "volta"
     "vim"
     "warrensbox/tap/tfswitch"
 )
 
 casks=(
-    "git-credential-manager-core"
+    "microsoft/git/git-credential-manager-core"
     "github"
     "miro"
     "postman"
