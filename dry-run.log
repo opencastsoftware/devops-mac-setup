@@ -1,0 +1,6 @@
+[DRY-RUN] PrivilegesCLI --add
+[DRY-RUN] brew update
+[DRY-RUN] source packages/brew_packages.sh
+[DRY-RUN] brew bundle check
+[DRY-RUN] PrivilegesCLI --remove
+[DRY-RUN] source packages/vscode_extensions.sh

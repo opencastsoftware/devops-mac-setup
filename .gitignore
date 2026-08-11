@@ -2,3 +2,4 @@
 **megalinter-reports**
 Brewfile
 Brewfile.lock.json
+dry-run.log

@@ -1,83 +1,83 @@
-# devops-mac-setup
-## Introduction
+# DevOps Mac Setup
 
- This repo is intended to provide a helper script to speed up and automate the setup of MacOs primarily for DevOps Engineers, but also Developers who intend on using <span style="color: green;">AWS, Docker.</span> and <span style="color: green;">Node.js</span>.
+This repository helps automate the setup of a developer workstation for DevOps and software engineering work on macOS. It installs common tooling, configures Git, and prepares a VS Code environment tailored for day-to-day engineering tasks.
 
-The setup script will install the Brew package manager and then proceed to install various brew formulas, casks and taps based on <a href="https://opencastsoftware.atlassian.net/wiki/spaces/OCOS/pages/2611511305/Onboarding+Guide+For+New+Team+Members"> our Confluence documentation page</a>, along with the option of configuring `git` integration with our Opencast GitHub; allowing the user to commit code via `git`.
+## What this project does
 
-This script will also install various <span style="color: blue;">VS Code Extensions</span> referenced in the above documentation. The list of extensions used by the script is defined in [`packages/vscode_extensions.sh`](packages/vscode_extensions.sh).
+The setup script installs and configures:
 
----
+- Homebrew and package management
+- commonly used developer tools and CLIs
+- VS Code extensions
+- Git configuration for the team environment
+- optional GitHub authentication setup
+- Podman machine setup for container-based workflows
 
-## Usage
+The package list is managed in:
 
-To run the startup script, either clone this repo to run the script locally (via HTTPS, assuming SSH Tokens are still to be setup for OC):
-```
+- [packages/brew_packages.sh](packages/brew_packages.sh)
+- [packages/vscode_extensions.sh](packages/vscode_extensions.sh)
+
+## Prerequisites
+
+Before running the setup:
+
+- macOS is required
+- you should have administrator access
+- internet access is required for package and tool installation
+- you should have an Opencast GitHub account or equivalent GitHub access if you plan to authenticate GitHub from the script
+
+## Quick start
+
+Clone the repository and run the script:
+
+```bash
 git clone https://github.com/opencastsoftware/devops-mac-setup.git
 cd devops-mac-setup
 bash ./setup.sh
 ```
-or run directly from this repo, assuming `curl` is installed.
 
-```
+You can also run it directly from GitHub with curl:
+
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/opencastsoftware/devops-mac-setup/HEAD/setup.sh)"
 ```
 
-### dry-run mode
+## Dry-run mode
 
-Although fairly limited in scope, this project allows for usage of dry run mode.
+A light dry-run mode is available to preview the commands without making changes:
 
-```
+```bash
 bash ./setup.sh --dry-run
 ```
-**Note** this will output a log file to your current directory `dry-run.log`.
 
-This allows a mocked run of the script as a check. **Note** this can also be used to check GitHub login for existing credentials.
+This writes output to a local `dry-run.log` file and is useful for checking what would run before making changes.
 
----
+## Customising the setup
 
-## Contributing to this Project
+You can adjust the installed packages or VS Code extensions by editing:
 
-<blockquote style="background-color: lightblue; color: darkblue;">
-<strong>Note:</strong>
-This repository uses <code>npm</code> to manage dependencies.
-</blockquote>
+- [packages/brew_packages.sh](packages/brew_packages.sh)
+- [packages/vscode_extensions.sh](packages/vscode_extensions.sh)
 
+The scripts are designed to support a standard developer environment, but you can tailor them to your own setup.
 
-The scripts which get triggered via ```pre-commit``` and ```commit``` hooks. This ensures all commits are tested according to Opencast's standards. A full list of scripts can be found in ```package.json```, but the core scripts to be aware of are:
+## Contributing
 
-Used to run the latest commit against the `main` branch:
-```
-npm run prod
-```
-Used to format and lint project:
-```
-npm run lint:fix
-```
-Runs when you commit:
-```
+This repository is intended to support team onboarding and machine setup. Contributions are welcome if they improve reliability, usability, or developer experience.
+
+The project uses npm-based tooling for project checks and release automation. Common commands include:
+
+```bash
 npm run test
-```
-Run to increment the commit tag and bump the version in the ```package.json```:
-```
+npm run lint:fix
 npm run release
 ```
 
-### Adding brew packages or VS Code Extensions
+For more detail, see [package.json](package.json).
 
-Both `brew` packages and `VS Code Extensions` can be amended by the respective lists located in this project repository:
+## Notes
 
-[`packages/brew_packages.sh`](packages/brew_packages.sh)
-
-[`packages/vscode_extensions.sh`](packages/vscode_extensions.sh)
-
-This can also be amended locally to install a customised setup specific to the user's requirements.
-
-**Note:** the required syntax/naming convention for VS Code extensions is the marketplace identifier.
-
-**e.g.**
-`""hashicorp.terraform""`
-for
-**`HashiCorp Terraform`**
-
-found under the VS Code marketplace.
+- This setup is primarily designed for macOS developer environments.
+- Some configuration steps, such as GitHub authentication and privilege setup, may require interactive confirmation.
+- The script is best used as a guided onboarding or workstation bootstrap tool rather than a fully unattended deployment system.
